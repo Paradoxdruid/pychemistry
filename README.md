@@ -8,6 +8,7 @@ A collection of python scripts for chemistry and biochemistry
 
 1. [buffer_app.py](#buffer_apppy)
 2. [mol2scad.py](#mol2scadpy)
+3. [dashmichaelis.py](#dashmichaelispy)
 
 ### buffer_app.py
 
@@ -16,7 +17,7 @@ A collection of python scripts for chemistry and biochemistry
 **Usage**
 
 ```
-buffer_app.py
+python buffer_app.py
 ```
 
 ![buffer_app screenshot](/images/buffer_app.png)
@@ -28,8 +29,22 @@ buffer_app.py
 **Usage**
 
 ```
-mol2scad.py -i <input molfile> -o <output scadfile>
+python mol2scad.py -i <input molfile> -o <output scadfile>
 ```
+
+### dashmichaelis.py
+
+`dashmichaelis.py` is a Dash webapp for regression fitting of enzyme kinetics data to a Michaelis-Menten model.
+
+**Usage**
+
+This web app is hosted at [Michaelis.BonhamCode.com](https://michaelis.bonhamcode.com)
+
+To activate it locally in a test environment:
+```
+python dashmichaelis.py
+```
+
 
 ## Authors
 These scripts are developed as academic software by [Dr. Andrew J. Bonham](https://github.com/Paradoxdruid) at the [Metropolitan State University of Denver](https://www.msudenver.edu). It is licensed under the GPL v3.0.

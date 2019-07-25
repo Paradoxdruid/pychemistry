@@ -6,7 +6,7 @@ Dash web app for fitting Michaelis-Menten enzyme kinetics.
 
 # Imports
 import dash
-from dash.dependencies import Input, Output
+from dash.dependencies import Input, Output, State
 import dash_table
 import dash_core_components as dcc
 import dash_html_components as html
@@ -28,27 +28,32 @@ server = app.server
 
 app.layout = html.Div(
     [
-        html.H1(
-            "Bonham Code: Michaelis-Menten Fitting", style={"font-family": "Roboto"}
+        html.H1("Bonham Code: Michaelis-Menten Fitting", style={"font-family": "Roboto"}),
+        html.Div(
+            "Input x and y data for Michaelis-Menten fitting", style={"font-family": "Roboto"}
         ),
         html.Div(
-            "Input x and y data for Michaelis-Menten fitting (use average values from multiple trials)",
+            [html.Button("Add Column", id="adding-rows-button", n_clicks=0)],
             style={"font-family": "Roboto"},
         ),
         dash_table.DataTable(
-            id="table-editing-simple",
-            columns=([{"id": "X", "name": "X"}] + [{"id": "Y", "name": "Y"}]),
+            id="adding-rows-table",
+            columns=([{"id": "X", "name": "X"}] + [{"id": "Y1", "name": "Y1"}]),
             data=[
-                {"X": 0, "Y": 0},
-                {"X": 1, "Y": 8},
-                {"X": 2, "Y": 9},
-                {"X": 3, "Y": 10},
-                {"X": 4, "Y": 11},
-                {"X": 5, "Y": 12},
+                {"X": 0, "Y1": 0},
+                {"X": 1, "Y1": 8},
+                {"X": 2, "Y1": 9},
+                {"X": 3, "Y1": 10},
+                {"X": 4, "Y1": 11},
+                {"X": 5, "Y1": 12},
             ],
             editable=True,
+            row_deletable=True,
         ),
-        dcc.Graph(id="table-editing-simple-output"),
+        html.Button(
+            "Add Row", id="editing-rows-button", n_clicks=0, style={"font-family": "Roboto"}
+        ),
+        dcc.Graph(id="adding-rows-graph"),
     ],
     style={"margin": "auto", "width": "50%"},
 )
@@ -69,10 +74,36 @@ def residuals(y, fitinfo):
 
 
 @app.callback(
-    Output("table-editing-simple-output", "figure"),
-    [Input("table-editing-simple", "data"), Input("table-editing-simple", "columns")],
+    Output("adding-rows-table", "data"),
+    [Input("editing-rows-button", "n_clicks")],
+    [State("adding-rows-table", "data"), State("adding-rows-table", "columns")],
 )
-def update_graph2(rows, columns):
+def add_row(n_clicks, rows, columns):
+    if n_clicks > 0:
+        rows.append({c["id"]: 0 for c in columns})
+    return rows
+
+
+@app.callback(
+    Output("adding-rows-table", "columns"),
+    [Input("adding-rows-button", "n_clicks")],
+    [State("adding-rows-table", "columns")],
+)
+def update_columns(n_clicks, existing_columns):
+    if n_clicks > 0:
+        count = 1 + n_clicks
+        counter = f"Y{count}"
+        existing_columns.append(
+            {"id": counter, "name": counter, "editable": True, "deletable": True}
+        )
+    return existing_columns
+
+
+@app.callback(
+    Output("adding-rows-graph", "figure"),
+    [Input("adding-rows-table", "data"), Input("adding-rows-table", "columns")],
+)
+def update_graph(rows, columns):
     """
     Take user data and perform nonlinear regression to Michaelis-Menten model.
     """
@@ -80,7 +111,14 @@ def update_graph2(rows, columns):
     df = pd.DataFrame(rows, columns=[c["name"] for c in columns])
 
     x = df["X"].astype(float).values
-    y = df["Y"].astype(float).values
+
+    # Clean up y data
+    ys = df.iloc[:, 1:]
+    ys = ys.replace("", 0)
+    ys = ys.fillna(0)
+    ys = ys.astype(float).values
+    y = ys.mean(axis=1)
+    y_std = ys.std(axis=1)
 
     def equation(variables, x):
         return (variables[0] * x) / (variables[1] + x)
@@ -96,7 +134,9 @@ def update_graph2(rows, columns):
     x_range = numpy.arange(numpy.min(x), numpy.max(x), abs(numpy.max(x) / 100))
 
     # Return plots and a data layout
-    plot1 = go.Scatter(x=x, y=y, mode="markers")
+    plot1 = go.Scatter(
+        x=x, y=y, mode="markers", error_y=dict(type="data", array=y_std, visible=True)
+    )
     plot2 = go.Scatter(x=x_range, y=equation(variables, x_range), mode="lines")
     plot_data = [plot1, plot2]
     layout = go.Layout(

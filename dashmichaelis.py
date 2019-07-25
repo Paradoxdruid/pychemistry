@@ -28,9 +28,12 @@ server = app.server
 
 app.layout = html.Div(
     [
-        html.H1("Bonham Code: Michaelis-Menten Fitting", style={"font-family": "Roboto"}),
+        html.H1(
+            "Bonham Code: Michaelis-Menten Fitting", style={"font-family": "Roboto"}
+        ),
         html.Div(
-            "Input x and y data for Michaelis-Menten fitting", style={"font-family": "Roboto"}
+            "Input x and y data for Michaelis-Menten fitting",
+            style={"font-family": "Roboto"},
         ),
         html.Div(
             [html.Button("Add Column", id="adding-rows-button", n_clicks=0)],
@@ -38,20 +41,27 @@ app.layout = html.Div(
         ),
         dash_table.DataTable(
             id="adding-rows-table",
-            columns=([{"id": "X", "name": "X"}] + [{"id": "Y1", "name": "Y1"}]),
+            columns=(
+                [{"id": "X", "name": "X"}]
+                + [{"id": "Y1", "name": "Y1"}]
+                + [{"id": "Y2", "name": "Y2"}]
+            ),
             data=[
-                {"X": 0, "Y1": 0},
-                {"X": 1, "Y1": 8},
-                {"X": 2, "Y1": 9},
-                {"X": 3, "Y1": 10},
-                {"X": 4, "Y1": 11},
-                {"X": 5, "Y1": 12},
+                {"X": 0, "Y1": 0, "Y2": 1},
+                {"X": 1, "Y1": 8, "Y2": 7},
+                {"X": 2, "Y1": 9, "Y2": 10},
+                {"X": 3, "Y1": 10, "Y2": 11},
+                {"X": 4, "Y1": 11, "Y2": 11},
+                {"X": 5, "Y1": 12, "Y2": 13},
             ],
             editable=True,
             row_deletable=True,
         ),
         html.Button(
-            "Add Row", id="editing-rows-button", n_clicks=0, style={"font-family": "Roboto"}
+            "Add Row",
+            id="editing-rows-button",
+            n_clicks=0,
+            style={"font-family": "Roboto"},
         ),
         dcc.Graph(id="adding-rows-graph"),
     ],
@@ -91,7 +101,7 @@ def add_row(n_clicks, rows, columns):
 )
 def update_columns(n_clicks, existing_columns):
     if n_clicks > 0:
-        count = 1 + n_clicks
+        count = 2 + n_clicks
         counter = f"Y{count}"
         existing_columns.append(
             {"id": counter, "name": counter, "editable": True, "deletable": True}

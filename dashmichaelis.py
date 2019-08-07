@@ -12,7 +12,7 @@ import dash_core_components as dcc
 import dash_html_components as html
 import pandas as pd
 import numpy
-from scipy.optimize import leastsq
+from scipy.optimize import curve_fit
 import plotly.graph_objs as go
 
 # Set CSS
@@ -32,7 +32,15 @@ app.layout = html.Div(
             "Bonham Code: Michaelis-Menten Fitting", style={"font-family": "Roboto"}
         ),
         html.Div(
-            "Input x and y data for Michaelis-Menten fitting",
+            "Input x and y data (with replicates) for Michaelis-Menten fitting",
+            style={"font-family": "Roboto"},
+        ),
+        html.Div(
+            dcc.Input(id="x-axis", value="Concentration", type="text"),
+            style={"font-family": "Roboto"},
+        ),
+        html.Div(
+            dcc.Input(id="y-axis", value="Enzyme Activity", type="text"),
             style={"font-family": "Roboto"},
         ),
         html.Div(
@@ -51,7 +59,7 @@ app.layout = html.Div(
                 {"X": 1, "Y1": 8, "Y2": 7},
                 {"X": 2, "Y1": 9, "Y2": 10},
                 {"X": 3, "Y1": 10, "Y2": 11},
-                {"X": 4, "Y1": 11, "Y2": 11},
+                {"X": 4, "Y1": 11, "Y2": 12},
                 {"X": 5, "Y1": 12, "Y2": 13},
             ],
             editable=True,
@@ -69,18 +77,6 @@ app.layout = html.Div(
 )
 
 # Functions
-
-
-def residuals(y, fitinfo):
-    """Returns r-squared value of a given regression."""
-    fit_error = 0
-    fit_variance = 0
-
-    for i in range(len(fitinfo["fvec"])):
-        fit_error += (fitinfo["fvec"][i]) ** 2
-        fit_variance += (y[i] - numpy.mean(y)) ** 2
-    r_squared = 1 - (fit_error / fit_variance)
-    return r_squared
 
 
 @app.callback(
@@ -111,9 +107,14 @@ def update_columns(n_clicks, existing_columns):
 
 @app.callback(
     Output("adding-rows-graph", "figure"),
-    [Input("adding-rows-table", "data"), Input("adding-rows-table", "columns")],
+    [
+        Input("adding-rows-table", "data"),
+        Input("adding-rows-table", "columns"),
+        Input("x-axis", "value"),
+        Input("y-axis", "value"),
+    ],
 )
-def update_graph(rows, columns):
+def update_graph(rows, columns, x_title, y_title):
     """
     Take user data and perform nonlinear regression to Michaelis-Menten model.
     """
@@ -129,25 +130,28 @@ def update_graph(rows, columns):
     ys = ys.astype(float).values
     y = ys.mean(axis=1)
     y_std = ys.std(axis=1)
+    y_std = [value if value > 0 else 0.00000001 for value in y_std]
+    # FIXME: fitting fails with zero std values; this is a kludge
 
-    def equation(variables, x):
-        return (variables[0] * x) / (variables[1] + x)
+    def equation(x, a, b):
+        return (a * x) / (b + x)
 
-    def error(variables, x, y):
-        return equation(variables, x) - y
+    # Fit the equation
+    variable_guesses = [numpy.max(y), numpy.min(y)]  # FIXME: better guesses!
+    variables, cov = curve_fit(equation, x, y, p0=variable_guesses, sigma=y_std)
+    var_errors = numpy.sqrt(numpy.diag(cov))
+    r_squared = 1 - (
+        numpy.sum(y - equation(x, *variables)) / numpy.sum((y - numpy.mean(y)) ** 2)
+    )
 
-    variable_guesses = [numpy.min(y), numpy.max(y), numpy.mean(x)]
-    output = leastsq(error, variable_guesses, args=(x, y), full_output=1)
-    variables = output[0]
-    fitinfo = output[2]
-    r_squared = residuals(y, fitinfo)
+    # Calculate useful range for plotting
     x_range = numpy.arange(numpy.min(x), numpy.max(x), abs(numpy.max(x) / 100))
 
     # Return plots and a data layout
     plot1 = go.Scatter(
         x=x, y=y, mode="markers", error_y=dict(type="data", array=y_std, visible=True)
     )
-    plot2 = go.Scatter(x=x_range, y=equation(variables, x_range), mode="lines")
+    plot2 = go.Scatter(x=x_range, y=equation(x_range, *variables), mode="lines")
     plot_data = [plot1, plot2]
     layout = go.Layout(
         title="Michaelis-Menten Fit",
@@ -163,23 +167,27 @@ def update_graph(rows, columns):
             ),
             dict(
                 x=0.5,
-                y=0.45,
+                y=0.44,
                 xref="paper",
                 yref="paper",
-                text="Km = {}".format(round(variables[1], 3)),
+                text="Km = {0} \u00B1 {1}".format(
+                    round(variables[1], 3), round(var_errors[1], 3)
+                ),
                 showarrow=False,
             ),
             dict(
                 x=0.5,
-                y=0.40,
+                y=0.38,
                 xref="paper",
                 yref="paper",
-                text="Vmax = {}".format(round(variables[0], 3)),
+                text="Vmax = {0} \u00B1 {1}".format(
+                    round(variables[0], 3), round(var_errors[0], 3)
+                ),
                 showarrow=False,
             ),
         ],
-        xaxis=dict(title="Concentration", titlefont=dict(family="Roboto", size=18)),
-        yaxis=dict(title="Enzyme Activity", titlefont=dict(family="Roboto", size=18)),
+        xaxis=dict(title=x_title, titlefont=dict(family="Roboto", size=18)),
+        yaxis=dict(title=y_title, titlefont=dict(family="Roboto", size=18)),
     )
     return {"data": plot_data, "layout": layout}
 

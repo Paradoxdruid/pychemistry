@@ -14,6 +14,7 @@ import pandas as pd
 import numpy
 from scipy.optimize import curve_fit
 import plotly.graph_objs as go
+from flask_caching import Cache
 
 # Set CSS
 external_css = [
@@ -25,6 +26,11 @@ external_css = [
 app = dash.Dash(__name__, external_stylesheets=external_css)
 
 server = app.server
+
+cache = Cache(
+    app.server, config={"CACHE_TYPE": "filesystem", "CACHE_DIR": "cache-directory"}
+)
+
 
 app.layout = html.Div(
     [
@@ -52,7 +58,7 @@ app.layout = html.Div(
             columns=(
                 [{"id": "X", "name": "X"}]
                 + [{"id": "Y1", "name": "Y1"}]
-                + [{"id": "Y2", "name": "Y2"}]
+                + [{"id": "Y2", "name": "Y2", "deletable": True}]
             ),
             data=[
                 {"X": 0, "Y1": 0, "Y2": 1},
@@ -114,6 +120,7 @@ def update_columns(n_clicks, existing_columns):
         Input("y-axis", "value"),
     ],
 )
+@cache.memoize(timeout=180000)  # 50 hour cache
 def update_graph(rows, columns, x_title, y_title):
     """
     Take user data and perform nonlinear regression to Michaelis-Menten model.

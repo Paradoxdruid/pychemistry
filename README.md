@@ -9,6 +9,7 @@ A collection of python scripts for chemistry and biochemistry
 1. [buffer_app.py](#buffer_apppy)
 2. [mol2scad.py](#mol2scadpy)
 3. [dashmichaelis.py](#dashmichaelispy)
+4. [dashbuffers.py](#dashbufferspy)
 
 ### buffer_app.py
 
@@ -43,6 +44,19 @@ This web app is hosted at [Michaelis.BonhamCode.com](https://michaelis.bonhamcod
 To activate it locally in a test environment:
 ```
 python dashmichaelis.py
+```
+
+### dashbuffers.py
+
+`dash-buffers.py` is a Dash webapp for biochemical buffer adjustment.
+
+**Usage**
+
+This web app is hosted at [Buffer.BonhamCode.com](https://buffer.bonhamcode.com)
+
+To activate it locally in a test environment:
+```
+python dash-buffers.py
 ```
 
 

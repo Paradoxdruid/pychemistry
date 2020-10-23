@@ -5,12 +5,12 @@ Dash web app for fitting Michaelis-Menten enzyme kinetics.
 """
 
 # Imports
-import dash
+import dash  # depends on version >1 for all dash components
 from dash.dependencies import Input, Output, State
 import dash_table
 import dash_core_components as dcc
 import dash_html_components as html
-import pandas as pd
+import pandas
 import numpy
 from scipy.optimize import curve_fit
 import plotly.graph_objs as go
@@ -25,10 +25,10 @@ external_css = [
 # Initialize app
 app = dash.Dash(__name__, external_stylesheets=external_css)
 
-server = app.server
+server = app.server  # server initialization for passenger wsgi
 
 cache = Cache(
-    app.server, config={"CACHE_TYPE": "filesystem", "CACHE_DIR": "cache-directory"}
+    server, config={"CACHE_TYPE": "filesystem", "CACHE_DIR": "cache-directory"}
 )
 
 
@@ -126,7 +126,7 @@ def update_graph(rows, columns, x_title, y_title):
     Take user data and perform nonlinear regression to Michaelis-Menten model.
     """
 
-    df = pd.DataFrame(rows, columns=[c["name"] for c in columns])
+    df = pandas.DataFrame(rows, columns=[c["name"] for c in columns])
 
     x = df["X"].astype(float).values
 

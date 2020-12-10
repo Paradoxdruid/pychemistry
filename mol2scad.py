@@ -6,7 +6,7 @@ Takes molfile / sdf coordinates as input, outputs a scad file for OpenSCAD
 """
 
 __author__ = "Andrew J. Bonham"
-__version__ = 0.1
+__version__ = 0.2
 __status__ = "Development"
 
 # Based on on makebucky.scad at http://www.thingiverse.com/thing:12675
@@ -19,10 +19,53 @@ __status__ = "Development"
 import sys
 import getopt
 
+# Common string header
+COMMON_START = """/*
+
+Creates a model of a molcule from a set
+of orthogonal coordinates
+
+*/
+
+module atom(rx,x0,y0,z0)
+{
+translate(v=[x0,y0,z0])
+sphere(r=rx,$fn=10);
+}
+
+/* spheres of radius rx are placed at the atomic
+positions - x0,y0,z0
+*/
+
+
+
+module bond(x2,y2,z2,x1,y1,z1)
+
+{
+tx = (x2 + x1)/2;
+ty = (y2 + y1)/2;
+tz = (z2 + z1)/2;
+ax = x2 - x1 ;
+ay = y2 - y1;
+az = z2 - z1;
+
+translate(v=[tx,ty,tz])
+// rotate command by d moews -
+rotate(a = [-acos(az/sqrt(ax*ax+ay*ay+az*az)), 0, -atan2(ax, ay)])
+cylinder(r=.2,h=sqrt(ax*ax+ay*ay+az*az),center=true,$fn=10);
+}
+
+
+
+union()
+{
+"""
+
 # Main Function
 
 
 def main(argv):
+    """Main function that processes args and calls helpers."""
 
     try:
         opts, args = getopt.getopt(argv, "hi:o:", ["ifile=", "ofile="])
@@ -45,9 +88,15 @@ def main(argv):
             outputfile = arg
         else:
             sys.exit(2)
+    # Call helpers
+    lines = process_lines(inputfile)
+    atoms_list, bonds_list = make_atoms_and_bonds_lists(lines)
+    output = format_output(atoms_list, bonds_list)
+    write_file(output, outputfile)
 
+
+def process_lines(inputfile):
     # Import file
-
     lines_tabbed = []
 
     with open(inputfile) as file_object:
@@ -62,7 +111,10 @@ def main(argv):
     lines_tabbed = [
         v for i, v in enumerate(lines_tabbed) if i not in (tuple(index_removal_one))
     ]
+    return lines_tabbed
 
+
+def make_atoms_and_bonds_lists(lines_tabbed):
     # Split off atoms and bonds lines
 
     atoms_list = [v for i, v in enumerate(lines_tabbed) if v[3].isalpha() is True]
@@ -76,6 +128,10 @@ def main(argv):
         and i != 0
     ]
 
+    return atoms_list, bonds_list
+
+
+def format_output(atoms_list, bonds_list):
     #  Atoms output
     output_atoms = []
 
@@ -115,49 +171,12 @@ def main(argv):
 
     output_two = "".join(output_bonds)
 
-    COMMON_START = """/*
-
-Creates a model of a molcule from a set
-of orthogonal coordinates
-
-*/
-
-module atom(rx,x0,y0,z0)
-{
-translate(v=[x0,y0,z0])
-sphere(r=rx,$fn=10);
-}
-
-/* spheres of radius rx are placed at the atomic
-positions - x0,y0,z0
-*/
-
-
-
-module bond(x2,y2,z2,x1,y1,z1)
-
-{
-tx = (x2 + x1)/2;
-ty = (y2 + y1)/2;
-tz = (z2 + z1)/2;
-ax = x2 - x1 ;
-ay = y2 - y1;
-az = z2 - z1;
-
-translate(v=[tx,ty,tz])
-// rotate command by d moews -
-rotate(a = [-acos(az/sqrt(ax*ax+ay*ay+az*az)), 0, -atan2(ax, ay)])
-cylinder(r=.2,h=sqrt(ax*ax+ay*ay+az*az),center=true,$fn=10);
-}
-
-
-
-union()
-{
-    """
-
     output = COMMON_START + output_one + output_two + """}"""
 
+    return output
+
+
+def write_file(output, outputfile):
     # Write the file
 
     with open(outputfile, "w") as f:

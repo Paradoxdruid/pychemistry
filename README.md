@@ -27,11 +27,7 @@ python buffer_app.py
 
 `mol2scad` is a script to turn molecular coordinates into SCAD files.  Takes molfile / sdf coordinates as input, outputs a scad file for OpenSCAD.
 
-**Usage**
-
-```
-python mol2scad.py -i <input molfile> -o <output scadfile>
-```
+See [mol2scad README](/scripts/mol2scad/README.md) for details.
 
 ### dashmichaelis
 

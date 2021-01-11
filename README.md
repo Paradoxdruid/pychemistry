@@ -15,13 +15,7 @@ A collection of python scripts for chemistry and biochemistry
 
 `buffer_app` is a quick GUI (Tkinter or Qt) to quickly calculate recipes for stock buffer dilution and adjustment.
 
-**Usage**
-
-```
-python buffer_app.py
-```
-
-![buffer_app screenshot](/images/buffer_app.png)
+See [buffer_app README](/scripts/buffer_app/README.md) for details.
 
 ### mol2scad
 
@@ -33,27 +27,13 @@ See [mol2scad README](/scripts/mol2scad/README.md) for details.
 
 `dashmichaelis` is a Dash webapp for regression fitting of enzyme kinetics data to a Michaelis-Menten model.
 
-**Usage**
-
-This web app is hosted at [Michaelis.BonhamCode.com](https://michaelis.bonhamcode.com)
-
-To activate it locally in a test environment:
-```
-python dashmichaelis.py
-```
+See [dash_michaelis README](/scripts/dash_michaelis/README.md) for details.
 
 ### dashbuffers
 
-`dash-buffers` is a Dash webapp for biochemical buffer adjustment.
+`dash_buffers` is a Dash webapp for biochemical buffer adjustment.
 
-**Usage**
-
-This web app is hosted at [Buffer.BonhamCode.com](https://buffer.bonhamcode.com)
-
-To activate it locally in a test environment:
-```
-python dash-buffers.py
-```
+See [dash_buffers README](/scripts/dash_buffers/README.md) for details.
 
 
 ## Authors

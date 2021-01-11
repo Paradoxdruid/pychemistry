@@ -6,14 +6,14 @@ A collection of python scripts for chemistry and biochemistry
 
 ## Current Scripts
 
-1. [buffer_app.py](#buffer_apppy)
-2. [mol2scad.py](#mol2scadpy)
-3. [dashmichaelis.py](#dashmichaelispy)
-4. [dashbuffers.py](#dashbufferspy)
+1. [buffer_app](#buffer_app)
+2. [mol2scad](#mol2scad)
+3. [dashmichaelis](#dashmichaelis)
+4. [dashbuffers](#dashbuffers)
 
-### buffer_app.py
+### buffer_app
 
-`buffer_app.py` is a quick GUI (Tkinter or Qt) to quickly calculate recipes for stock buffer dilution and adjustment.
+`buffer_app` is a quick GUI (Tkinter or Qt) to quickly calculate recipes for stock buffer dilution and adjustment.
 
 **Usage**
 
@@ -23,9 +23,9 @@ python buffer_app.py
 
 ![buffer_app screenshot](/images/buffer_app.png)
 
-### mol2scad.py
+### mol2scad
 
-`mol2scad.py` is a script to turn molecular coordinates into SCAD files.  Takes molfile / sdf coordinates as input, outputs a scad file for OpenSCAD.
+`mol2scad` is a script to turn molecular coordinates into SCAD files.  Takes molfile / sdf coordinates as input, outputs a scad file for OpenSCAD.
 
 **Usage**
 
@@ -33,9 +33,9 @@ python buffer_app.py
 python mol2scad.py -i <input molfile> -o <output scadfile>
 ```
 
-### dashmichaelis.py
+### dashmichaelis
 
-`dashmichaelis.py` is a Dash webapp for regression fitting of enzyme kinetics data to a Michaelis-Menten model.
+`dashmichaelis` is a Dash webapp for regression fitting of enzyme kinetics data to a Michaelis-Menten model.
 
 **Usage**
 
@@ -46,9 +46,9 @@ To activate it locally in a test environment:
 python dashmichaelis.py
 ```
 
-### dashbuffers.py
+### dashbuffers
 
-`dash-buffers.py` is a Dash webapp for biochemical buffer adjustment.
+`dash-buffers` is a Dash webapp for biochemical buffer adjustment.
 
 **Usage**
 

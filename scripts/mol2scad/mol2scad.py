@@ -6,8 +6,8 @@ Takes molfile / sdf coordinates as input, outputs a scad file for OpenSCAD
 """
 
 __author__ = "Andrew J. Bonham"
-__version__ = 0.2
-__status__ = "Development"
+__version__ = "1.0.0"
+__status__ = "Production"
 
 # Based on on makebucky.scad at http://www.thingiverse.com/thing:12675
 
@@ -64,8 +64,10 @@ union()
 # Main Function
 
 
-def main(argv):
+def main():
     """Main function that processes args and calls helpers."""
+
+    argv = sys.argv[1:]
 
     try:
         opts, args = getopt.getopt(argv, "hi:o:", ["ifile=", "ofile="])
@@ -186,4 +188,4 @@ def write_file(output, outputfile):
 # Main magic
 
 if __name__ == "__main__":
-    main(sys.argv[1:])
+    main()

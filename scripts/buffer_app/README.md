@@ -10,6 +10,11 @@
 python buffer_app.py
 ```
 
+or, if installed via `pip install buffer_app`:
+```
+buffer_app
+```
+
 ![buffer_app screenshot](/images/buffer_app.png)
 
 ## Authors

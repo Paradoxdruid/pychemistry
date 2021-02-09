@@ -13,7 +13,7 @@ long_description = (here / "README.md").read_text(encoding="utf-8")
 # Setup via pip
 setup(
     name="mol2scad",
-    version="1.0.0",
+    version="1.1.0",
     author="Andrew J. Bonham",
     author_email="abonham@msudenver.edu",
     description="A script to turn molecular coordinates files into SCAD files",

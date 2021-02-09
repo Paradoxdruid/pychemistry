@@ -34,7 +34,5 @@ setup(
     ],
     keywords="chemistry, buffer, biochemistry",
     python_requires=">=3.6",
-    entry_points={
-        "console_scripts": ["mol2scad = molscad:main"],
-    },
+    entry_points={"console_scripts": ["mol2scad = mol2scad:main"],},
 )

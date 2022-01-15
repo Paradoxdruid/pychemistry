@@ -1,53 +1,199 @@
 # -*- coding: utf-8 -*-
 import dash
-import dash_core_components as dcc
+
 import dash_html_components as html
+import dash_bootstrap_components as dbc
 from dash.dependencies import Input, Output, State
 
 # Set up dash server
-app = dash.Dash()
+app = dash.Dash(__name__, external_stylesheets=[dbc.themes.FLATLY])
 app.title = "Buffer Adjustment Calculator"
-server = app.server  # Expert server for use by Passenger framework
+server = app.server  # Export server for use by Passenger framework
 
-# Set up graphical layout
-app.layout = html.Div(
+# Components for Layout
+init_buffer_input = dbc.FormGroup(
     [
-        html.H1("Buffer Titration Solving", style={"font-family": "Roboto"}),
-        html.Div(
-            "Input Buffer Initial concentration (M)", style={"font-family": "Roboto"}
+        dbc.Label("Initial Buffer Concentration", html_for="init-buffer"),
+        dbc.Input(type="init-buffer", id="buff_init_conc", value="1.0"),
+        dbc.FormText(
+            "Input initial stock buffer concentration",
+            color="secondary",
         ),
-        dcc.Input(id="buff_init_conc", type="text", value="1.0"),
-        html.Div(
-            "Input Buffer Final concentration (M)", style={"font-family": "Roboto"}
+    ]
+)
+
+final_buffer_input = dbc.FormGroup(
+    [
+        dbc.Label("Final Buffer Concentration", html_for="final-buffer"),
+        dbc.Input(type="final-buffer", id="buff_final_conc", value="0.15"),
+        dbc.FormText(
+            "Input final buffer concentration in the solution",
+            color="secondary",
         ),
-        dcc.Input(id="buff_final_conc", type="text", value="0.15"),
-        html.Div("Input Buffer pKa", style={"font-family": "Roboto"}),
-        dcc.Input(id="buff_pka", type="text", value="8.0"),
-        html.Div("Input Final Volume of Solution (L)", style={"font-family": "Roboto"}),
-        dcc.Input(id="final_volume", type="text", value="1.5"),
-        html.Div(
-            "Input stock HCl (or strong acid titrant) concentration (M)",
-            style={"font-family": "Roboto"},
+    ]
+)
+
+buffer_pka_input = dbc.FormGroup(
+    [
+        dbc.Label("Buffer pKa", html_for="buffer-pka"),
+        dbc.Input(type="buffer-pka", id="buff_pka", value="8.0"),
+        dbc.FormText(
+            "Input buffer pKa",
+            color="secondary",
         ),
-        dcc.Input(id="hcl_conc", type="text", value="12.0"),
-        html.Div(
-            "Input stock NaOH (or strong base titrant) concentration (M)",
-            style={"font-family": "Roboto"},
-        ),
-        dcc.Input(id="naoh_conc", type="text", value="10.0"),
-        html.Div("Input Initial Solution pH", style={"font-family": "Roboto"}),
-        dcc.Input(id="init_ph", type="text", value="7.0"),
-        html.Div("Input Final Solution pH", style={"font-family": "Roboto"}),
-        dcc.Input(id="final_ph", type="text", value="8.3"),
-        html.Button(id="submit-button", n_clicks=0, children="Submit"),
-        html.Div(id="output-div", style={"font-family": "Roboto"}),
-    ],
-    style={"margin": "auto", "width": "50%"},
+    ]
 )
 
 
+final_vol_input = dbc.FormGroup(
+    [
+        dbc.Label("Final Solution Volume", html_for="final_vol"),
+        dbc.Input(type="final_vol", id="final_volume", value="1.5"),
+        dbc.FormText(
+            "Input final solution volume (L)",
+            color="secondary",
+        ),
+    ]
+)
+
+form1 = dbc.Form(
+    [init_buffer_input, final_buffer_input, buffer_pka_input, final_vol_input]
+)
+
+hcl_conc_input = dbc.FormGroup(
+    [
+        dbc.Label("Stock HCl concentration", html_for="hcl_conc"),
+        dbc.Input(type="hcl_conc", id="hcl_conc", value="12.0"),
+        dbc.FormText(
+            "Input stock HCl (or strong acid titrant) concentration (M)",
+            color="secondary",
+        ),
+    ]
+)
+
+naoh_conc_input = dbc.FormGroup(
+    [
+        dbc.Label("Stock NaOH concentration", html_for="naoh_conc"),
+        dbc.Input(type="naoh_conc", id="naoh_conc", value="10.0"),
+        dbc.FormText(
+            "Input stock NaOH (or strong acid titrant) concentration (M)",
+            color="secondary",
+        ),
+    ]
+)
+
+init_ph_input = dbc.FormGroup(
+    [
+        dbc.Label("Initial Buffer pH", html_for="init_ph"),
+        dbc.Input(type="init_ph", id="init_ph", value="7.0"),
+        dbc.FormText(
+            "Input initial buffer pH",
+            color="secondary",
+        ),
+    ]
+)
+
+final_ph_input = dbc.FormGroup(
+    [
+        dbc.Label("Final Solution pH", html_for="final_ph"),
+        dbc.Input(type="final_ph", id="final_ph", value="8.3"),
+        dbc.FormText(
+            "Input final solution pH",
+            color="secondary",
+        ),
+    ]
+)
+
+form2 = dbc.Form([hcl_conc_input, naoh_conc_input, init_ph_input, final_ph_input])
+
+# App layout using dash-bootstrap-components
+app.layout = dbc.Container(
+    [
+        dbc.Row(
+            [
+                dbc.Col(
+                    dbc.Card(
+                        [
+                            dbc.CardHeader(html.H4("Buffer Titration Solving")),
+                            dbc.CardBody(
+                                [
+                                    dbc.Row(
+                                        [
+                                            dbc.Col(
+                                                form1,
+                                                xs={"size": 12},
+                                                sm={"size": 12},
+                                                md={"size": 6},
+                                                lg={"size": 6},
+                                            ),
+                                            dbc.Col(
+                                                form2,
+                                                xs={"size": 12},
+                                                sm={"size": 12},
+                                                md={"size": 6},
+                                                lg={"size": 6},
+                                            ),
+                                        ]
+                                    ),
+                                    dbc.Row(
+                                        [
+                                            dbc.Col(
+                                                [
+                                                    dbc.Button(
+                                                        "Submit",
+                                                        id="submit-button",
+                                                        n_clicks=0,
+                                                    ),
+                                                ],
+                                            ),
+                                        ],
+                                    ),
+                                    dbc.Row(
+                                        dbc.Col(
+                                            dbc.Alert(
+                                                [
+                                                    html.H4(
+                                                        "Recipe:",
+                                                        className="alert-heading",
+                                                    ),
+                                                    html.Div(
+                                                        id="output-div",
+                                                    ),
+                                                ],
+                                                color="success",
+                                                style={"margin-top": "30px"},
+                                                is_open=False,
+                                                id="recipe",
+                                                fade=True,
+                                            ),
+                                        ),
+                                    ),
+                                ],
+                            ),
+                        ],
+                        className="shadow-lg border-primary mb-3",
+                    ),
+                    xs={"size": 12},
+                    sm={"size": 10},
+                    md={"size": 10},
+                    lg={"size": 8},
+                ),
+            ],
+            style={"padding-top": "50px"},
+            justify="center",
+        ),
+    ],
+    fluid=True,
+    className="bg-secondary",
+    style={"min-height": "100vh"},  # fill the whole background
+)
+
+
+# Display recipe on submit, hide initially
 @app.callback(
     Output(component_id="output-div", component_property="children"),
+    Output(component_id="recipe", component_property="is_open"),
+    Output(component_id="recipe", component_property="color"),
     [Input("submit-button", "n_clicks")],
     [
         State("buff_init_conc", "value"),
@@ -58,6 +204,7 @@ app.layout = html.Div(
         State("naoh_conc", "value"),
         State("init_ph", "value"),
         State("final_ph", "value"),
+        State("recipe", "is_open"),
     ],
 )
 def Buffer_Solver(
@@ -70,6 +217,7 @@ def Buffer_Solver(
     NaOH_stock_conc,
     initial_pH,
     final_pH,
+    is_open,
 ):
     # Sanitize input and catch unusable input
     try:
@@ -82,25 +230,25 @@ def Buffer_Solver(
         initial_pH = float(initial_pH)
         final_pH = float(final_pH)
     except ValueError:
-        return "Invalid input values, try again"
+        return "Invalid input values, try again", True, "warning"
 
     # Remove common nonsense conditions
     if not (0.0 < buffer_conc_initial <= 100.0):
-        return "Invalid initial buffer concentration"
+        return "Invalid initial buffer concentration", True, "warning"
     if not (0.0 < buffer_conc_final <= 100.0):
-        return "Invalid final buffer concentration"
+        return "Invalid final buffer concentration", True, "warning"
     if not (0.0 < HCl_stock_conc <= 100.0):
-        return "Invalid HCl concentration"
+        return "Invalid HCl concentration", True, "warning"
     if not (0.0 < NaOH_stock_conc <= 100.0):
-        return "Invalid NaOH concentration"
+        return "Invalid NaOH concentration", True, "warning"
     if buffer_conc_final > buffer_conc_initial:
-        return "Can't increase concentration through dilution"
+        return "Can't increase concentration through dilution", True, "warning"
     if not (0.0 < buffer_pKa <= 100.0):
-        return "Invalid pKa value"
+        return "Invalid pKa value", True, "warning"
     if not (0.0 < initial_pH <= 20.0):
-        return "Invalid initial pH"
+        return "Invalid initial pH", True, "warning"
     if not (0.0 < final_pH <= 20.0):
-        return "Invalid final pH"
+        return "Invalid final pH", True, "warning"
 
     # First find moles of buffer and volume of buffer:
     buffer_volume = (buffer_conc_final * total_volume) / buffer_conc_initial
@@ -130,25 +278,22 @@ def Buffer_Solver(
     volume_water = total_volume - (volume_titrant + buffer_volume)
 
     # Return functional recipe
-    return (
-        "Buffer recipe: add {0} liters stock buffer, "
-        "{1} liters of stock {2}, and {3} liters of water"
-    ).format(
-        round(buffer_volume, 4),
-        round(volume_titrant, 4),
-        titrant,
-        round(volume_water, 4),
-    )
-
-
-external_css = [
-    "https://unpkg.com/normalize.css@8.0.0/normalize.css",
-    "https://fonts.googleapis.com/css?family=Roboto",
-]
-
-
-for css in external_css:
-    app.css.append_css({"external_url": css})
+    if n_clicks == 0:  # Initial non-clicked state
+        return ("", False, "warning")
+    else:
+        return (
+            (
+                "Buffer recipe: add {0} liters stock buffer, "
+                "{1} liters of stock {2}, and {3} liters of water."
+            ).format(
+                round(buffer_volume, 4),
+                round(volume_titrant, 4),
+                titrant,
+                round(volume_water, 4),
+            ),
+            True,
+            "success",
+        )
 
 
 # Main magic

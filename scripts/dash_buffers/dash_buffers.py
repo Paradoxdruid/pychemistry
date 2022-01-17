@@ -6,7 +6,10 @@ import dash_bootstrap_components as dbc
 from dash.dependencies import Input, Output, State
 
 # Set up dash server
-app = dash.Dash(__name__, external_stylesheets=[dbc.themes.FLATLY])
+app = dash.Dash(__name__, external_stylesheets=[dbc.themes.FLATLY],
+               meta_tags=[
+        {"name": "viewport", "content": "width=device-width, initial-scale=1"}
+    ])
 app.title = "Buffer Adjustment Calculator"
 server = app.server  # Export server for use by Passenger framework
 
@@ -123,14 +126,14 @@ app.layout = dbc.Container(
                                                 form1,
                                                 xs={"size": 12},
                                                 sm={"size": 12},
-                                                md={"size": 6},
+                                                md={"size": 12},
                                                 lg={"size": 6},
                                             ),
                                             dbc.Col(
                                                 form2,
                                                 xs={"size": 12},
                                                 sm={"size": 12},
-                                                md={"size": 6},
+                                                md={"size": 12},
                                                 lg={"size": 6},
                                             ),
                                         ]
@@ -174,8 +177,8 @@ app.layout = dbc.Container(
                         className="shadow-lg border-primary mb-3",
                     ),
                     xs={"size": 12},
-                    sm={"size": 10},
-                    md={"size": 10},
+                    sm={"size": 12},
+                    md={"size": 12},
                     lg={"size": 8},
                 ),
             ],

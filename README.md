@@ -1,6 +1,6 @@
 # pychemistry
 
-![gpl3.0](https://img.shields.io/github/license/Paradoxdruid/pychemistry.svg "GPL 3.0 Licensed")  [![Language grade: Python](https://img.shields.io/lgtm/grade/python/g/Paradoxdruid/pychemistry.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/Paradoxdruid/pychemistry/context:python)  [![CodeFactor](https://www.codefactor.io/repository/github/paradoxdruid/pychemistry/badge)](https://www.codefactor.io/repository/github/paradoxdruid/pychemistry) [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/ambv/black) 
+![gpl3.0](https://img.shields.io/github/license/Paradoxdruid/pychemistry.svg "GPL 3.0 Licensed")  [![Language grade: Python](https://img.shields.io/lgtm/grade/python/g/Paradoxdruid/pychemistry.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/Paradoxdruid/pychemistry/context:python)  [![CodeFactor](https://www.codefactor.io/repository/github/paradoxdruid/pychemistry/badge)](https://www.codefactor.io/repository/github/paradoxdruid/pychemistry) [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/ambv/black)
 
 <p align="right">
   ⭐ &nbsp;&nbsp;the project to show your appreciation. :arrow_upper_right:
@@ -14,6 +14,7 @@ A collection of python scripts for chemistry and biochemistry
 2. [mol2scad](#mol2scad)
 3. [dashmichaelis](#dashmichaelis)
 4. [dashbuffers](#dashbuffers)
+5. [doseresponse](#doseresponse)
 
 ### buffer_app
 
@@ -39,6 +40,12 @@ See [dash_michaelis README](/scripts/dash_michaelis) for details.
 
 See [dash_buffers README](/scripts/dash_buffers) for details.
 
+### doseresponse
+
+`doseresponse` is a Dash webapp for regression fitting on binding response data to a Langmuir isotherm model.
+
+See [doseresponse README](/scripts/doseresponse) for details.
 
 ## Authors
+
 These scripts are developed as academic software by [Dr. Andrew J. Bonham](https://github.com/Paradoxdruid) at the [Metropolitan State University of Denver](https://www.msudenver.edu). It is licensed under the GPL v3.0.

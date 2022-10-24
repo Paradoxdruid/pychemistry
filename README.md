@@ -1,6 +1,6 @@
 # pychemistry
 
-![gpl3.0](https://img.shields.io/github/license/Paradoxdruid/pychemistry.svg "GPL 3.0 Licensed")  [![Language grade: Python](https://img.shields.io/lgtm/grade/python/g/Paradoxdruid/pychemistry.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/Paradoxdruid/pychemistry/context:python)  [![CodeFactor](https://www.codefactor.io/repository/github/paradoxdruid/pychemistry/badge)](https://www.codefactor.io/repository/github/paradoxdruid/pychemistry) [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/ambv/black)
+[![CodeFactor](https://www.codefactor.io/repository/github/paradoxdruid/pychemistry/badge)](https://www.codefactor.io/repository/github/paradoxdruid/pychemistry) [![CodeQL](https://github.com/Paradoxdruid/pychemistry/actions/workflows/codeql.yml/badge.svg)](https://github.com/Paradoxdruid/pychemistry/actions/workflows/codeql.yml) ![GitHub](https://img.shields.io/github/license/Paradoxdruid/pychemistry?color=success) [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/ambv/black)
 
 <p align="right">
   ⭐ &nbsp;&nbsp;the project to show your appreciation. :arrow_upper_right:

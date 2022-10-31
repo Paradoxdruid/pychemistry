@@ -12,7 +12,7 @@ import PySimpleGUI as sg  # Requires version 4.0 or greater
 # Functions
 
 
-def app_view():
+def app_view() -> None:
     """
     Create the GUI and send values to the buffer_solver, process updates.
     """
@@ -76,7 +76,7 @@ def app_view():
             break
         # Capture button presses
         if event == "SHOW":
-            recipe = buffer_solver(
+            recipe: str = buffer_solver(
                 values["_BINIT_"],
                 values["_BFIN_"],
                 values["_PKA_"],
@@ -93,29 +93,29 @@ def app_view():
 
 
 def buffer_solver(
-    buffer_conc_initial,
-    buffer_conc_final,
-    buffer_pKa,
-    total_volume,
-    HCl_stock_conc,
-    NaOH_stock_conc,
-    initial_pH,
-    final_pH,
-):
+    _buffer_conc_initial: str,
+    _buffer_conc_final: str,
+    _buffer_pKa: str,
+    _total_volume: str,
+    _HCl_stock_conc: str,
+    _NaOH_stock_conc: str,
+    _initial_pH: str,
+    _final_pH: str,
+) -> str:
     """
     Take in buffer adjustment parameters and return an adjustment recipe.
     """
 
     # Sanitize input and catch unusable input
     try:
-        buffer_conc_initial = float(buffer_conc_initial)
-        buffer_conc_final = float(buffer_conc_final)
-        buffer_pKa = float(buffer_pKa)
-        total_volume = float(total_volume)
-        HCl_stock_conc = float(HCl_stock_conc)
-        NaOH_stock_conc = float(NaOH_stock_conc)
-        initial_pH = float(initial_pH)
-        final_pH = float(final_pH)
+        buffer_conc_initial = float(_buffer_conc_initial)
+        buffer_conc_final = float(_buffer_conc_final)
+        buffer_pKa = float(_buffer_pKa)
+        total_volume = float(_total_volume)
+        HCl_stock_conc = float(_HCl_stock_conc)
+        NaOH_stock_conc = float(_NaOH_stock_conc)
+        initial_pH = float(_initial_pH)
+        final_pH = float(_final_pH)
     except ValueError:
         return "Invalid input values, try again"
 
@@ -174,7 +174,8 @@ def buffer_solver(
 
     # Return functional recipe
     return (
-        "Buffer recipe:\nadd {0} liters stock buffer, \n{1} liters of stock {2},\nand {3} liters of water"
+        "Buffer recipe:\nadd {0} liters stock buffer, \
+            \n{1} liters of stock {2},\nand {3} liters of water"
     ).format(
         round(buffer_volume, 4),
         round(volume_titrant, 4),

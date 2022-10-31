@@ -105,3 +105,9 @@ venv.bak/
 
 # flask_caching
 cache-directory/
+
+# VSCode
+.vscode/
+
+# In-progress
+scripts/buffer_app/buffer_app_pydantic.py

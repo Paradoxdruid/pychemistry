@@ -16,8 +16,9 @@ __status__ = "Production"
 
 # Import Dependencies
 
-import sys
 import getopt
+import sys
+from typing import List, Tuple
 
 # Common string header
 COMMON_START = """/*
@@ -64,7 +65,7 @@ union()
 # Main Function
 
 
-def main():
+def main() -> None:
     """Main function that processes args and calls helpers."""
 
     argv = sys.argv[1:]
@@ -97,7 +98,7 @@ def main():
     write_file(output, outputfile)
 
 
-def process_lines(inputfile):
+def process_lines(inputfile: str) -> List[List[str]]:
     # Import file
     lines_tabbed = []
 
@@ -116,7 +117,9 @@ def process_lines(inputfile):
     return lines_tabbed
 
 
-def make_atoms_and_bonds_lists(lines_tabbed):
+def make_atoms_and_bonds_lists(
+    lines_tabbed: List[List[str]],
+) -> Tuple[List[List[str]], List[List[str]]]:
     # Split off atoms and bonds lines
 
     atoms_list = [v for i, v in enumerate(lines_tabbed) if v[3].isalpha() is True]
@@ -133,7 +136,7 @@ def make_atoms_and_bonds_lists(lines_tabbed):
     return atoms_list, bonds_list
 
 
-def format_output(atoms_list, bonds_list):
+def format_output(atoms_list: List[List[str]], bonds_list: List[List[str]]) -> str:
     #  Atoms output
     output_atoms = []
 
@@ -178,7 +181,7 @@ def format_output(atoms_list, bonds_list):
     return output
 
 
-def write_file(output, outputfile):
+def write_file(output: str, outputfile: str) -> None:
     # Write the file
 
     with open(outputfile, "w") as f:
